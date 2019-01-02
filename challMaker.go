@@ -63,7 +63,11 @@ func create(){
 // Turns the parameters into json and writes them into a file named "name.json"
 func jsonify(name string, description string, valor int, flag string, category string){
 	chall := Challenge{name, description, valor, flag, category}
-	bs, _ := json.Marshal(chall)
+	bs, err := json.Marshal(chall)
+
+	if err != nil {
+		panic(err)
+	}
 
 	jsonName := name + ".json"
 
