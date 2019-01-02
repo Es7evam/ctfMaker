@@ -82,10 +82,39 @@ func createCTF(){
 	jsonify(name, challs, tags)
 }
 
+func viewCtf(name string)(ctf CTF){
+	// Casts into json file
+	jsonName := "CTFs/" + name + "/config.json"
+
+	jsonFile, err := os.Open(jsonName)
+        if err != nil {
+                fmt.Println("Non existing file")
+                fmt.Println(err)
+        }
+        defer jsonFile.Close()
+        byteValue, _ := ioutil.ReadAll(jsonFile)
+
+        json.Unmarshal(byteValue, &ctf)
+
+	fmt.Println("\nName: ", ctf.Name)
+
+	/*	
+		List CTF Challenges -> TODO
+	if(ctf.Challs != nil){
+		fmt.Println("Challenges: ", strings.Join(ctf.Challs.Name, ", "))
+	}
+	*/
+
+	if(ctf.Tags != nil){
+		fmt.Println("Tags: ", strings.Join(ctf.Tags, ", "))
+	}
+	return ctf
+}
+
 func main(){
 	// Dealing with the flags at the cli
 	createPtr := flag.Bool("create", false, "create CTF")
-	//viewPtr := flag.String("view", "", "view CTF with provided name")
+	viewCtfPtr := flag.String("viewctf", "", "view provided CTF informations")
 	//editPtr := flag.String("edit", "", "edit CTF with provided name")
 	listPtr := flag.Bool("list", false, "list existing CTFs")
 	flag.Parse()
@@ -98,6 +127,9 @@ func main(){
 	}
 	if(*createPtr){
 		createCTF()
+	}
+	if(*viewCtfPtr != ""){
+		viewCtf(*viewCtfPtr)
 	}
 }
 
