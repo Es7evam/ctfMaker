@@ -7,6 +7,7 @@ import(
 	"io/ioutil"
 	"bufio"
 	"strings"
+	"flag"
 )
 
 type Challenge struct{
@@ -120,32 +121,31 @@ func edit(name string){
 }
 
 func main(){
-	fmt.Println("Do you want to create, edit or view a challenge?")
-	fmt.Println("1 	- Create")
-	fmt.Println("2 	- View")
-	fmt.Println("3 	- Edit")
-	fmt.Println("99	- Exit")
-	var option int
-	fmt.Scan(&option)
-	switch option{
-	case 1:
+	createPtr := flag.Bool("create", false, "create challenge")
+	viewPtr := flag.Bool("view", false, "view challenge")
+	editPtr := flag.Bool("edit", false, "edit challenge")
+	flag.Parse()
+
+	// No arguments provided 
+	if len(os.Args) < 2{
+		fmt.Println("No arguments provided.")
+	        fmt.Println("Usage of ", os.Args[0])
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+	if(*createPtr){
 		create()
-	case 2:
+	}else if(*viewPtr){
 		fmt.Println("\nType the name of the challenge")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		name := scanner.Text()
 		view(name)
-	case 3:
+	}else if(*editPtr){
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		name := scanner.Text()
 		edit(name)
-	case 99:
-		break;
-	default:
-		fmt.Println("\nInvalid option, try again")
-		main()
 	}
 }
 
