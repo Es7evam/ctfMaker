@@ -7,7 +7,7 @@ import(
 	"bufio"
 	"strings"
 	"flag"
-	"./folderManage"
+	"./libctfMaker"
 	"io/ioutil"
 	"log"
 )
@@ -71,7 +71,7 @@ func createCTF(){
 	}
 
 	// Create folder of the CTF
-	folderManage.CreateDir(path)
+	libctfMaker.CreateDir(path)
 
 	// Create tags for the CTF
 	fmt.Println("Type the tags separed by a space")
@@ -119,8 +119,16 @@ func main(){
 	listPtr := flag.Bool("list", false, "list existing CTFs")
 	flag.Parse()
 
+	// No arguments provided 
+        if len(os.Args) < 2{
+                fmt.Println("No arguments provided.")
+                fmt.Println("Usage of ", os.Args[0])
+                flag.PrintDefaults()
+                os.Exit(0)
+        }
+
 	// Creates directory CTFs if it doesn't exists
-	folderManage.CreateDir("CTFs")
+	libctfMaker.CreateDir("CTFs")
 	fmt.Println("Executing ...")
 	if(*listPtr){
 		listsCTF()
