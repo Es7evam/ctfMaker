@@ -12,6 +12,8 @@ import (
 	"strings"
 )
 
+// The Challenge struct stores a challenge options.
+// It has Name, Description (Desc), Value, Flag and Category (Type)
 type Challenge struct {
 	Name  string `json:"name"`
 	Desc  string `json:"desc"`
@@ -20,12 +22,16 @@ type Challenge struct {
 	Type  string `json:"type"`
 }
 
+// The CTF struct stores the CTF structure
+// It has Name, a list of challenges (Challs) and Tags.
 type CTF struct {
 	Name   string      `json:"name"`
 	Challs []Challenge `json:"challs"`
 	Tags   []string    `json:"tags"`
 }
 
+// Gets the name, challenges and tags of a CTF and saves it into a .json file
+// The file will be at CTFs/ctfname/config.json
 func jsonify(name string, challs []Challenge, tags []string) {
 	ctf := CTF{name, challs, tags}
 
@@ -82,6 +88,8 @@ func createCTF() {
 	jsonify(name, challs, tags)
 }
 
+// Function to view the given ctf attributes.
+// It will get the content from the config.json file. 
 func viewCtf(name string) (ctf CTF) {
 	// Casts into json file
 	jsonName := "CTFs/" + name + "/config.json"
@@ -111,6 +119,9 @@ func viewCtf(name string) (ctf CTF) {
 	return ctf
 }
 
+// Main function.
+// It deals with the arguments passed using flags.
+// In case it is the first execution, it creates the necessary folders.
 func main() {
 	// Dealing with the flags at the cli
 	createPtr := flag.Bool("create", false, "create CTF")
