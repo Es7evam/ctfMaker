@@ -11,6 +11,8 @@ import (
 	"strings"
 )
 
+// The Challenge struct stores a challenge options.
+// It has Name, Description (Desc), Value, Flag and Category (Type)
 type Challenge struct {
 	Name  string `json:"name"`
 	Desc  string `json:"desc"`
@@ -50,7 +52,7 @@ func create(challCTF string) {
 	category := scanner.Text()
 
 	description := strings.Join(desc, "\n")
-	fmt.Println("Confirma os valores do chall?")
+	fmt.Println("Please check the challenge attributes")
 	fmt.Println("Name: ", name)
 	//fmt.Println("Desc: ", strings.Join(desc, "\n"))
 	fmt.Println("Desc: ", description)
@@ -61,6 +63,7 @@ func create(challCTF string) {
 	jsonify(name, description, valor, flag, category, challCTF)
 }
 
+// Auxiliary function to get the path of a challenge.
 func getpath(name string, challCTF string) string {
 	if challCTF == "" {
 		challCTF = "CTFs/standalone"
@@ -96,6 +99,7 @@ func jsonify(name string, description string, valor int, flag string, category s
 	ioutil.WriteFile(jsonName, bs, 0600)
 }
 
+// Function to visualize challenge with given name.
 func view(name string, challCTF string) (chall Challenge) {
 	jsonName := getpath(name, challCTF)
 	jsonFile, err := os.Open(jsonName)
@@ -115,6 +119,7 @@ func view(name string, challCTF string) (chall Challenge) {
 	return chall
 }
 
+// Function to edit the challenge with given name.
 func edit(name string, challCTF string) {
 	chall := view(name, challCTF)
 	fmt.Println("What do you want to edit?")
@@ -148,6 +153,8 @@ func edit(name string, challCTF string) {
 var ctfPtr string
 var createPtr, viewPtr, editPtr *bool
 
+// Init function
+// Treats the argument flags.
 func init() {
 	createPtr = flag.Bool("create", false, "create challenge")
 	viewPtr = flag.Bool("view", false, "view challenge")
@@ -155,6 +162,8 @@ func init() {
 	flag.StringVar(&ctfPtr, "ctf", "", "select ctf to associate the challenge of the string")
 }
 
+// Main function.
+// It receives user input and calls the wanted functions.
 func main() {
 	flag.Parse()
 
