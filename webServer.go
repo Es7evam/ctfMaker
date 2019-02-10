@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -74,7 +73,6 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// setting router rule
 	http.HandleFunc("/", uploadChall)
-	http.HandleFunc("/login", login)
 
 	// Setting up listener
 	err := http.ListenAndServe(":9090", nil)
