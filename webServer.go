@@ -12,17 +12,34 @@ import (
 	"time"
 )
 
+type Category struct {
+	Name  string
+	Value string
+}
+
+type toSubmit struct {
+	Types []Category
+	Token string
+}
+
+//var data []string=
+
 func uploadChall(w http.ResponseWriter, r *http.Request) {
 	challFile := ""
+	categories := []Category{{Name: "Reverse Engineering", Value: "reveng"}, {Name: "Web", Value: "web"}}
+	var send toSubmit
+
+	send.Types = categories
 
 	if r.Method == "GET" {
 		crutime := time.Now().Unix()
 		h := md5.New()
 		io.WriteString(h, strconv.FormatInt(crutime, 10))
 		token := fmt.Sprintf("%x", h.Sum(nil))
+		send.Token = token
 
 		t, _ := template.ParseFiles("upload.gtpl")
-		t.Execute(w, token)
+		t.Execute(w, categories)
 	} else if r.Method == "POST" {
 		// Get uploaded file
 		r.ParseMultipartForm(32 << 20)
@@ -67,7 +84,6 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Name: %s\n Desc: %s\n Flag: %s\n Type: %s\n Value: %d\n", challName, challDesc, challFlag, challType, challValue)
 		fmt.Printf("Filename: %s\n", challFile)
 	}
-
 }
 
 func main() {

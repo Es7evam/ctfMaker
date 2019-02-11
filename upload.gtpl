@@ -12,10 +12,16 @@
 
     Category: 
     <select name="category">
+    	{{range .}}
+    		<option value="{{.Value}}">{{.Name}}</option>
+    	{{end}}
+    </select> <br>
+
+    <!--	
     <option value="cat1">apple</option>
     <option value="cat2">pear</option>
     <option value="cat3">banana</option>
-    </select> <br>
+	-->
 
     File: 
     <input type="file" name="uploadfile" />
