@@ -39,7 +39,7 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 		send.Token = token
 
 		t, _ := template.ParseFiles("upload.gtpl")
-		t.Execute(w, categories)
+		t.Execute(w, send)
 	} else if r.Method == "POST" {
 		// Get uploaded file
 		r.ParseMultipartForm(32 << 20)
