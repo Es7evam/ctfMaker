@@ -21,8 +21,8 @@ type Challenge struct {
 	Type  string `json:"type"`
 }
 
-// Receives user input and creates a challenge
-func create(challCTF string) {
+// CreateChall function receives user input and creates a challenge
+func CreateChall(challCTF string) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	fmt.Println("Type the name of the challenge")
@@ -60,7 +60,9 @@ func create(challCTF string) {
 	fmt.Println("Flag: ", flag)
 	fmt.Println("Category: ", category)
 
-	jsonify(name, description, valor, flag, category, challCTF)
+	chall := Challenge{name, description, valor, flag, category}
+	JsonifyChall(chall, challCTF)
+
 }
 
 // Auxiliary function to get the path of a challenge.
@@ -74,8 +76,13 @@ func getpath(name string, challCTF string) string {
 		// If the CTF exists
 		exists, _ := libctfMaker.FileExists(challCTF)
 		if !exists {
-			fmt.Println("CTF does not exist")
-			os.Exit(1)
+			if challCTF != "CTFs/webServer" {
+				fmt.Println("CTF does not exist")
+				os.Exit(1)
+			} else {
+				fmt.Println("Creating webServer folder")
+				libctfMaker.CreateDir(challCTF)
+			}
 		}
 	}
 	path := challCTF + "/" + name + ".json"
@@ -83,8 +90,8 @@ func getpath(name string, challCTF string) string {
 }
 
 // Turns the parameters into json and writes them into a file named "name.json"
-func jsonify(name string, description string, valor int, flag string, category string, challCTF string) {
-	chall := Challenge{name, description, valor, flag, category}
+func JsonifyChall(chall Challenge, challCTF string) {
+	/**/ //chall := Challenge{name, description, valor, flag, category}
 	bs, err := json.Marshal(chall)
 
 	if err != nil {
@@ -93,14 +100,14 @@ func jsonify(name string, description string, valor int, flag string, category s
 
 	// if the challenge belongs to a ctf
 	// then the path will be CTFs/ctfname/challenge.json
-	jsonName := getpath(name, challCTF)
+	jsonName := getpath(chall.Name, challCTF)
 
 	// Writes json to file with permission only to the user
 	ioutil.WriteFile(jsonName, bs, 0600)
 }
 
-// Function to visualize challenge with given name.
-func view(name string, challCTF string) (chall Challenge) {
+// ViewChall function to visualize challenge with given name.
+func ViewChall(name string, challCTF string) (chall Challenge) {
 	jsonName := getpath(name, challCTF)
 	jsonFile, err := os.Open(jsonName)
 	if err != nil {
@@ -119,9 +126,9 @@ func view(name string, challCTF string) (chall Challenge) {
 	return chall
 }
 
-// Function to edit the challenge with given name.
-func edit(name string, challCTF string) {
-	chall := view(name, challCTF)
+// EditChall function to edit the challenge with given name.
+func EditChall(name string, challCTF string) {
+	chall := ViewChall(name, challCTF)
 	fmt.Println("What do you want to edit?")
 	fmt.Println("1 - Description")
 	fmt.Println("2 - Value")
@@ -147,7 +154,7 @@ func edit(name string, challCTF string) {
 		fmt.Scan(&val)
 		chall.Value = val
 	}
-	jsonify(chall.Name, chall.Desc, chall.Value, chall.Flag, chall.Type, challCTF)
+	JsonifyChall(chall, challCTF)
 }
 
 var ctfPtr string
@@ -162,6 +169,8 @@ func init() {
 	flag.StringVar(&ctfPtr, "ctf", "", "select ctf to associate the challenge of the string")
 }
 
+/**/
+/*
 // Main function.
 // It receives user input and calls the wanted functions.
 func main() {
@@ -178,17 +187,18 @@ func main() {
 	}
 	if *createPtr {
 		fmt.Println(ctfPtr)
-		create(ctfPtr)
+		CreateChall(ctfPtr)
 	} else if *viewPtr {
 		fmt.Println("\nType the name of the challenge")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		name := scanner.Text()
-		view(name, ctfPtr)
+		ViewChall(name, ctfPtr)
 	} else if *editPtr {
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		name := scanner.Text()
-		edit(name, ctfPtr)
+		EditChall(name, ctfPtr)
 	}
 }
+*/

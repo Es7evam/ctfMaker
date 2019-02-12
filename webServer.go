@@ -73,16 +73,19 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// TODO -> Insert at Challenge struct, validate category input
+		// 		-> Use files
+		var challValue int
 		challName := template.HTMLEscapeString(r.Form.Get("name"))
 		challDesc := template.HTMLEscapeString(r.Form.Get("desc"))
 		challFlag := template.HTMLEscapeString(r.Form.Get("flag"))
 		challType := template.HTMLEscapeString(r.Form.Get("category"))
-
-		var challValue int
 		fmt.Sscan(r.Form.Get("value"), &challValue)
-		//challFile := template.HTMLEscapeString(handler.Filename)
+
 		fmt.Printf("Name: %s\n Desc: %s\n Flag: %s\n Type: %s\n Value: %d\n", challName, challDesc, challFlag, challType, challValue)
 		fmt.Printf("Filename: %s\n", challFile)
+
+		chall := Challenge{challName, challDesc, challValue, challFlag, challType}
+		JsonifyChall(chall, "webServer")
 	}
 }
 

@@ -4,7 +4,7 @@ import (
 	"./libctfMaker"
 	"bufio"
 	"encoding/json"
-	"flag"
+	//	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,6 +12,7 @@ import (
 	"strings"
 )
 
+/**/ /*
 // The Challenge struct stores a challenge options.
 // It has Name, Description (Desc), Value, Flag and Category (Type)
 type Challenge struct {
@@ -21,6 +22,7 @@ type Challenge struct {
 	Flag  string `json:"flag"`
 	Type  string `json:"type"`
 }
+*/
 
 // The CTF struct stores the CTF structure
 // It has Name, a list of challenges (Challs) and Tags.
@@ -49,8 +51,8 @@ func jsonify(name string, challs []Challenge, tags []string) {
 	ioutil.WriteFile(jsonName, bs, 0644)
 }
 
-// Function that lists all folders (and files) at CTFs folder
-func listsCTF() {
+// ListCTF Function that lists all folders (and files) at CTFs folder
+func ListCTF() {
 	files, err := ioutil.ReadDir("CTFs")
 	if err != nil {
 		log.Fatal(err)
@@ -61,8 +63,8 @@ func listsCTF() {
 	}
 }
 
-// Function to handle CTF creation
-func createCTF() {
+// CreateCTF Function to handle CTF creation
+func CreateCTF() {
 	// Receives user input and processes it
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Type the name of the CTF")
@@ -88,9 +90,9 @@ func createCTF() {
 	jsonify(name, challs, tags)
 }
 
-// Function to view the given ctf attributes.
-// It will get the content from the config.json file. 
-func viewCtf(name string) (ctf CTF) {
+// ViewCTF Function to view the given ctf attributes.
+// It will get the content from the config.json file.
+func ViewCTF(name string) (ctf CTF) {
 	// Casts into json file
 	jsonName := "CTFs/" + name + "/config.json"
 
@@ -122,6 +124,7 @@ func viewCtf(name string) (ctf CTF) {
 // Main function.
 // It deals with the arguments passed using flags.
 // In case it is the first execution, it creates the necessary folders.
+/*
 func main() {
 	// Dealing with the flags at the cli
 	createPtr := flag.Bool("create", false, "create CTF")
@@ -142,12 +145,13 @@ func main() {
 	libctfMaker.CreateDir("CTFs")
 	fmt.Println("Executing ...")
 	if *listPtr {
-		listsCTF()
+		listCTF()
 	}
 	if *createPtr {
-		createCTF()
+		CreateCTF()
 	}
 	if *viewCtfPtr != "" {
-		viewCtf(*viewCtfPtr)
+		ViewCTF(*viewCtfPtr)
 	}
 }
+*/
