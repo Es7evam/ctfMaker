@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -26,7 +27,15 @@ type toSubmit struct {
 
 func uploadChall(w http.ResponseWriter, r *http.Request) {
 	challFile := ""
-	categories := []Category{{Name: "Reverse Engineering", Value: "reveng"}, {Name: "Web", Value: "web"}}
+	categories := []Category{
+		{Name: "Cryptography", Value: "crypto"},
+		{Name: "Reverse Engineering", Value: "reveng"},
+		{Name: "Web", Value: "web"},
+		{Name: "Linux", Value: "linux"},
+		{Name: "Programming", Value: "prog"},
+		{Name: "Networking", Value: "network"},
+		{Name: "Pwning", Value: "pwn"},
+	}
 	var send toSubmit
 
 	send.Types = categories
@@ -52,7 +61,10 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 		} else {
 			// Writes the file into ./uploads/filename
 			fmt.Fprintf(w, "%v", handler.Header)
-			f, err := os.OpenFile("./uploads/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+			reg, err := regexp.Compile("[^A-Za-z0-9]+")
+			challFile = reg.ReplaceAllString(handler.Filename, "")
+
+			f, err := os.OpenFile("./uploads/"+challFile, os.O_WRONLY|os.O_CREATE, 0666)
 
 			// In case any saving error occurs
 			if err != nil {
@@ -64,7 +76,6 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 
 			// Copies the received data into the file
 			io.Copy(f, file)
-			challFile = handler.Filename
 		}
 
 		if len(r.Form["name"][0]) == 0 {
@@ -75,7 +86,11 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 		// TODO -> Insert at Challenge struct, validate category input
 		// 		-> Use files
 		var challValue int
-		challName := template.HTMLEscapeString(r.Form.Get("name"))
+
+		// Regex to remove path traversal vulnerability
+		reg, err := regexp.Compile("[^A-Za-z0-9]+")
+
+		challName := reg.ReplaceAllString(template.HTMLEscapeString(r.Form.Get("name")), "")
 		challDesc := template.HTMLEscapeString(r.Form.Get("desc"))
 		challFlag := template.HTMLEscapeString(r.Form.Get("flag"))
 		challType := template.HTMLEscapeString(r.Form.Get("category"))
