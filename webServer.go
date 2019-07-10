@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"fmt"
+	"github.com/es7evam/ctfmaker/models"
 	"html/template"
 	"io"
 	"log"
@@ -13,21 +14,19 @@ import (
 	"time"
 )
 
-type Category struct {
+type category struct {
 	Name  string
 	Value string
 }
 
 type toSubmit struct {
-	Types []Category
+	Types []category
 	Token string
 }
 
-//var data []string=
-
 func uploadChall(w http.ResponseWriter, r *http.Request) {
 	challFile := ""
-	categories := []Category{
+	categories := []category{
 		{Name: "Cryptography", Value: "crypto"},
 		{Name: "Reverse Engineering", Value: "reveng"},
 		{Name: "Web", Value: "web"},
@@ -99,7 +98,7 @@ func uploadChall(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Name: %s\n Desc: %s\n Flag: %s\n Type: %s\n Value: %d\n", challName, challDesc, challFlag, challType, challValue)
 		fmt.Printf("Filename: %s\n", challFile)
 
-		chall := Challenge{challName, challDesc, challValue, challFlag, challType}
+		chall := models.Challenge{challName, challDesc, challValue, challFlag, challType}
 		JsonifyChall(chall, "webServer")
 	}
 }

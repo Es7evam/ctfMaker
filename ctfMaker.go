@@ -1,40 +1,29 @@
 package main
 
 import (
-	"./libctfMaker"
 	"bufio"
 	"encoding/json"
-	//	"flag"
+
 	"fmt"
+	"github.com/es7evam/ctfmaker/libctfmaker"
+	"github.com/es7evam/ctfmaker/models"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 )
 
-/**/ /*
-// The Challenge struct stores a challenge options.
-// It has Name, Description (Desc), Value, Flag and Category (Type)
-type Challenge struct {
-	Name  string `json:"name"`
-	Desc  string `json:"desc"`
-	Value int    `json:"value"`
-	Flag  string `json:"flag"`
-	Type  string `json:"type"`
-}
-*/
-
 // The CTF struct stores the CTF structure
 // It has Name, a list of challenges (Challs) and Tags.
 type CTF struct {
-	Name   string      `json:"name"`
-	Challs []Challenge `json:"challs"`
-	Tags   []string    `json:"tags"`
+	Name   string             `json:"name"`
+	Challs []models.Challenge `json:"challs"`
+	Tags   []string           `json:"tags"`
 }
 
 // Gets the name, challenges and tags of a CTF and saves it into a .json file
 // The file will be at CTFs/ctfname/config.json
-func jsonify(name string, challs []Challenge, tags []string) {
+func jsonify(name string, challs []models.Challenge, tags []string) {
 	ctf := CTF{name, challs, tags}
 
 	// Create json file
@@ -79,14 +68,14 @@ func CreateCTF() {
 	}
 
 	// Create folder of the CTF
-	libctfMaker.CreateDir(path)
+	libctfmaker.CreateDir(path)
 
 	// Create tags for the CTF
 	fmt.Println("Type the tags separed by a space")
 	scanner.Scan()
 	tags := strings.Split(scanner.Text(), " ")
 
-	var challs []Challenge
+	var challs []models.Challenge
 	jsonify(name, challs, tags)
 }
 
@@ -109,9 +98,9 @@ func ViewCTF(name string) (ctf CTF) {
 	fmt.Println("\nName: ", ctf.Name)
 
 	/*
-			List CTF Challenges -> TODO
+			List CTF models.Challenges -> TODO
 		if(ctf.Challs != nil){
-			fmt.Println("Challenges: ", strings.Join(ctf.Challs.Name, ", "))
+			fmt.Println("models.Challenges: ", strings.Join(ctf.Challs.Name, ", "))
 		}
 	*/
 

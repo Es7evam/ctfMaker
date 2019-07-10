@@ -1,25 +1,16 @@
 package main
 
 import (
-	"./libctfMaker"
 	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/es7evam/ctfmaker/libctfmaker"
+	"github.com/es7evam/ctfmaker/models"
 	"io/ioutil"
 	"os"
 	"strings"
 )
-
-// The Challenge struct stores a challenge options.
-// It has Name, Description (Desc), Value, Flag and Category (Type)
-type Challenge struct {
-	Name  string `json:"name"`
-	Desc  string `json:"desc"`
-	Value int    `json:"value"`
-	Flag  string `json:"flag"`
-	Type  string `json:"type"`
-}
 
 // CreateChall function receives user input and creates a challenge
 func CreateChall(challCTF string) {
@@ -60,7 +51,7 @@ func CreateChall(challCTF string) {
 	fmt.Println("Flag: ", flag)
 	fmt.Println("Category: ", category)
 
-	chall := Challenge{name, description, valor, flag, category}
+	chall := models.Challenge{name, description, valor, flag, category}
 	JsonifyChall(chall, challCTF)
 
 }
@@ -70,18 +61,18 @@ func getpath(name string, challCTF string) string {
 	if challCTF == "" {
 		challCTF = "CTFs/standalone"
 		// Creates standalone directory if it doesn't exist
-		libctfMaker.CreateDir(challCTF)
+		libctfmaker.CreateDir(challCTF)
 	} else {
 		challCTF = "CTFs/" + challCTF
 		// If the CTF exists
-		exists, _ := libctfMaker.FileExists(challCTF)
+		exists, _ := libctfmaker.FileExists(challCTF)
 		if !exists {
 			if challCTF != "CTFs/webServer" {
 				fmt.Println("CTF does not exist")
 				os.Exit(1)
 			} else {
 				fmt.Println("Creating webServer folder")
-				libctfMaker.CreateDir(challCTF)
+				libctfmaker.CreateDir(challCTF)
 			}
 		}
 	}
@@ -89,9 +80,9 @@ func getpath(name string, challCTF string) string {
 	return path
 }
 
-// Turns the parameters into json and writes them into a file named "name.json"
-func JsonifyChall(chall Challenge, challCTF string) {
-	/**/ //chall := Challenge{name, description, valor, flag, category}
+// JsonifyChall Turns the parameters into json and writes them into a file named "name.json"
+func JsonifyChall(chall models.Challenge, challCTF string) {
+	/**/ //chall := models.Challenge{name, description, valor, flag, category}
 	bs, err := json.Marshal(chall)
 
 	if err != nil {
@@ -107,7 +98,7 @@ func JsonifyChall(chall Challenge, challCTF string) {
 }
 
 // ViewChall function to visualize challenge with given name.
-func ViewChall(name string, challCTF string) (chall Challenge) {
+func ViewChall(name string, challCTF string) (chall models.Challenge) {
 	jsonName := getpath(name, challCTF)
 	jsonFile, err := os.Open(jsonName)
 	if err != nil {
